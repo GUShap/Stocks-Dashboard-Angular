@@ -9,30 +9,35 @@ import { BehaviorSubject } from 'rxjs';
 export class StocksService {
   private _apiKey = 'TEUH27YAZWKT45IS'
 
-  private _stock$ = new BehaviorSubject<any>(null)
-  public stock$ = this._stock$.asObservable()
+  private _companyName$ = new BehaviorSubject<any>(null)
+  public companyName$ = this._companyName$.asObservable()
 
   constructor(private utils: UtilsService, private http: HttpClient) { }
 
-  public loadStockDataDaily(symbol = 'IBM'): any {
+  public loadStockDataDaily(symbol: string): any {
     let data = this.utils.load(symbol)
     if (!data) {
-      data={
-        date:[],
-        value:[]
+      data = {
+        date: [],
+        value: [],
+        name: symbol
       }
       this.http.get(`https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${symbol}&outputsize=compact&apikey=${this._apiKey}`)
-        .subscribe((res: any) => {      
-          for(const key in res["Time Series (Daily)"]){
+        .subscribe(async (res: any) => {
+          for (const key in res["Time Series (Daily)"]) {
             data.date.push(key)
-            data.value.push(res["Time Series (Daily)"][key]["4. close"])
+            data.value.push(+res["Time Series (Daily)"][key]["4. close"])
           }
-          // data = res["Time Series (Daily)"]
           this.utils.store(symbol, data)
+          return data
         })
     }
     return data
   }
 
+  public async getCompanyDetails(symbol: string) {
+   return this.http.get(`https://api.polygon.io/v1/meta/symbols/${symbol}/company?apiKey=PuereyJTxUAGN42apNF4DRRj4VKIjtGq`)
+      .subscribe()
+  }
 }
 

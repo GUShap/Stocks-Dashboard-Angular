@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { DashboardService } from 'src/app/services/dashboard/dashboard.service';
+import { StocksService } from 'src/app/services/stocks/stocks.service';
 
 @Component({
   selector: 'app-posts',
@@ -6,10 +8,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./posts.component.scss']
 })
 export class PostsComponent implements OnInit {
-
-  constructor() { }
+  chartData!: Object[];  
+  constructor(private dashboardService: DashboardService, private stockService:StocksService) { }
 
   ngOnInit(): void {
+    this.chartData = this.dashboardService.dashboardData()    
   }
 
 }

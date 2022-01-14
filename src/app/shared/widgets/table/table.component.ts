@@ -1,9 +1,7 @@
 import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
 
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { StocksService } from 'src/app/services/stocks/stocks.service';
 
 @Component({
   selector: 'app-widget-table',
@@ -20,10 +18,18 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 export class TableComponent implements OnInit {
   @Input() chartData!: any
 
+  dataSource:Object[]=[]
+  columnsToDisplay = ['name', 'weight', 'symbol', 'position'];
+  expandedElement!: PeriodicElement | null
+
+  constructor(){}
+
   ngOnInit(): void {
 
-// console.log(this.chartData);
-
+this.chartData.forEach((stock: any)=>{
+// var details = 
+  this.dataSource.push(stock)
+})
 
     setTimeout(() => {
       window.dispatchEvent(
@@ -31,10 +37,8 @@ export class TableComponent implements OnInit {
       ), 300
     })
   }
-  
-  dataSource = ELEMENT_DATA;
-  columnsToDisplay = ['Symbol', 'Current Price', 'Change'];
-  expandedElement!: PeriodicElement | null
+
+
 }
 
 export interface PeriodicElement {

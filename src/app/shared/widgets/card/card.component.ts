@@ -19,13 +19,14 @@ export class CardComponent implements OnInit {
 
   ngOnInit(): void {
     // console.log(this.chartData);
-    
+
     const { stockData, name } = this.chartData
-    const slicedData = stockData.value.slice(0,7).reverse()
-    const slicedDates = stockData.date.slice(0,7).reverse()
- 
+    const slicedData = stockData.value.slice(0, 7).reverse()
+    const slicedDates = stockData.date.slice(0, 7).reverse()
+
+
     this.label = name
-    this.percentage = +((slicedData[slicedData.length-1]-slicedData[0])/slicedData[0]*100).toFixed(2)
+    this.percentage = +((slicedData[slicedData.length - 1] - slicedData[0]) / slicedData[0] * 100).toFixed(2)
 
 
     this.chartOptions = {
@@ -63,10 +64,10 @@ export class CardComponent implements OnInit {
         }
       },
       xAxis: {
+        categories: slicedDates,
         title: {
           text: null
         },
-        categories: slicedDates
       },
       yAxis: {
         labels: {
@@ -77,9 +78,8 @@ export class CardComponent implements OnInit {
         },
       },
       series: [{
-        data: slicedData
-      }
-      ]
+        data:  slicedData
+      }]
     };
 
     HC_exporting(Highcharts);

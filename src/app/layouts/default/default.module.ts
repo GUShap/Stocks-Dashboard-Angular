@@ -14,6 +14,11 @@ import { MatDividerModule } from '@angular/material/divider';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import {MatCardModule} from '@angular/material/card';
 import {MatIconModule} from '@angular/material/icon';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatPaginatorModule} from '@angular/material/paginator';
+import { MatInputModule } from '@angular/material/input';
+
+
 
 
 
@@ -21,7 +26,8 @@ import {MatIconModule} from '@angular/material/icon';
   declarations: [
     DefaultComponent,
     DashboardComponent,
-    PostsComponent
+    PostsComponent,
+    
   ],
   imports: [
     CommonModule,
@@ -31,11 +37,13 @@ import {MatIconModule} from '@angular/material/icon';
     MatDividerModule,
     FlexLayoutModule,
     MatCardModule,
-    MatIconModule
-  
+    MatIconModule,
+    MatFormFieldModule,
+    MatPaginatorModule,
+    MatInputModule
   ],
   providers:[
-    DashboardService
+    DashboardService,
   ]
 })
 export class DefaultModule { }

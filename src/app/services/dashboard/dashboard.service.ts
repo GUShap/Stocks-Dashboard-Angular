@@ -30,7 +30,7 @@ export class DashboardService {
     })
 
     user.portfolio.forEach((stock: { symbol: string; amount: number; }) => {
-      return chartData.push(
+      chartData.push(
         {
           name: stock.symbol,
           amount:stock.amount,

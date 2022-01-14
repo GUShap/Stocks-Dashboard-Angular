@@ -21,9 +21,9 @@ export class DashboardComponent implements OnInit {
 
   chartData!: Object[];  
 
-  constructor(private dashboardService: DashboardService, private stocksService: StocksService, private cd: ChangeDetectorRef) { }
+  constructor(private dashboardService: DashboardService) { }
 
-  ngOnInit(): void {
+   ngOnInit(): void {
     this.chartData = this.dashboardService.dashboardData()
     this.subscribeCmps()
   }
