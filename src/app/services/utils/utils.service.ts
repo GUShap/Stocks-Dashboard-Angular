@@ -20,6 +20,10 @@ export class UtilsService {
     return txt
   }
 
+  public getRandomInt(max = 500000, min = 10000) {
+    return Math.floor(Math.random() * (max - min) + min)
+  }
+
   public store(key: string, any: any): void {
     localStorage[key] = JSON.stringify(any);
   }

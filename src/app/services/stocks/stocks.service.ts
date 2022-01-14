@@ -1,20 +1,221 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { UtilsService } from '../utils/utils.service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StocksService {
   private _apiKey = 'TEUH27YAZWKT45IS'
+  private subscribe: Subscription
 
   private _companyName$ = new BehaviorSubject<any>(null)
   public companyName$ = this._companyName$.asObservable()
 
+  private _tickersDb = ["VXX",
+  "UVXY",
+  "IEFA",
+  "RSX",
+  "ARKG",
+  "ITB",
+  "USMV",
+  "VIXY",
+  "IGV",
+  "EZU",
+  "INDA",
+  "MTUM",
+  "EFV",
+  "SVXY",
+  "VLUE",
+  "GOVT",
+  "CBOE",
+  "USHY",
+  "QUAL",
+  "EFAV",
+  "MOAT",
+  "ARKQ",
+  "RYLD",
+  "REM",
+  "ICSH",
+  "HEFA",
+  "FLOT",
+  "JMST",
+  "EFG",
+  "NOBL",
+  "ECH",
+  "NEAR",
+  "PAVE",
+  "JPST",
+  "DNOV",
+  "IYZ",
+  "IDV",
+  "HYD",
+  "HFGO",
+  "BBEU",
+  "BUFG",
+  "COWZ",
+  "ACWV",
+  "PICK",
+  "BBJP",
+  "ARKX",
+  "BBAX",
+  "OEUR",
+  "ITA",
+  "ESGV",
+  "IGE",
+  "VUSB",
+  "IFRA",
+  "ICVT",
+  "BBCA",
+  "IAGG",
+  "FGRO",
+  "FBCG",
+  "ICF",
+  "VNM",
+  "ITM",
+  "CNYA",
+  "HYDB",
+  "TAIL",
+  "EEMV",
+  "IEO",
+  "PJAN",
+  "SLVP",
+  "IQDG",
+  "FMAG",
+  "BUFR",
+  "CALF",
+  "VAMO",
+  "VSGX",
+  "BBRE",
+  "DRSK",
+  "NULV",
+  "IYT",
+  "TMFC",
+  "TMFM",
+  "IZRL",
+  "FDEC",
+  "GSST",
+  "SHYD",
+  "KNG",
+  "DIVB",
+  "VCEB",
+  "FSEP",
+  "TMFG",
+  "EMHY",
+  "EDEN",
+  "SMMD",
+  "NUSC",
+  "CEFS",
+  "SYLD",
+  "OGIG",
+  "DINT",
+  "FPRO",
+  "UJAN",
+  "IGHG",
+  "MLN",
+  "XMPT",
+  "BBUS",
+  "REGL",
+  "TYA",
+  "SVAL",
+  "GSEW",
+  "PRNT",
+  "PTLC",
+  "FCPI",
+  "VIXM",
+  "IYJ",
+  "NULG",
+  "UMAY",
+  "DFEB",
+  "LQDI",
+  "PAPR",
+  "XBTF",
+  "FOCT",
+  "OMFL",
+  "DMAY",
+  "VFVA",
+  "MRGR",
+  "JEMA",
+  "SEPZ",
+  "EMGF",
+  "ALFA",
+  "ESML",
+  "SMDV",
+  "GVI",
+  "CEMB",
+  "FBCV",
+  "MSTB",
+  "EWUS",
+  "GCOW",
+  "DAUG",
+  "FLQL",
+  "BUFD",
+  "VOTE",
+  "HEGD",
+  "FCTR",
+  "FMAR",
+  "NUMV",
+  "HYMU",
+  "CTRU",
+  "OUSA",
+  "NUMG",
+  "SMIN",
+  "FRDM",
+  "TTAC",
+  "NURE",
+  "PAWZ",
+  "HYHG",
+  "XDEC",
+  "HEEM",
+  "PTNQ",
+  "PFEB",
+  "GHYG",
+  "PTMC",
+  "BUFT",
+  "FAPR",
+  "FYLD",
+  "FAUG",
+  "FDRV",
+  "PBSM",
+  "USEP",
+  "BBIN",
+  "QJUN",
+  "DFNL",
+  "VXZ",
+  "SMB",
+  "FCLD",
+  "QTAP",
+  "MOHR",
+  "TSJA",
+  "PLRG",
+  "EUCG",
+  "NUDM",
+  "BJAN",
+  "CSM",
+  "DSEP",
+  "FMIL",
+  "JPHY",
+  "GTIP",
+  "EPRF",
+  "MINN",
+  "DDLS",
+  "FLQM",
+  "PSMM",
+  "NOVZ",
+  "IYLD",
+  "PSEP",
+  "BDEC",
+  "FLBL",
+  "SECT",
+  "QVAL","IBM","MSFT","ABNB","TT"]
+  private _allTickers$ = new BehaviorSubject<string[]>(this._tickersDb)
+  public allTickers$ = this._allTickers$.asObservable()
+
   constructor(private utils: UtilsService, private http: HttpClient) { }
 
-  public loadStockDataDaily(symbol: string): any {
+  public loadStockDataDaily(symbol: string): Promise<any> {
+
     let data = this.utils.load(symbol)
     if (!data) {
       data = {
@@ -22,7 +223,7 @@ export class StocksService {
         value: [],
         name: symbol
       }
-      this.http.get(`https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${symbol}&outputsize=compact&apikey=${this._apiKey}`)
+      this.subscribe = this.http.get(`https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${symbol}&outputsize=compact&apikey=${this._apiKey}`)
         .subscribe(async (res: any) => {
           for (const key in res["Time Series (Daily)"]) {
             data.date.push(key)
@@ -36,8 +237,7 @@ export class StocksService {
   }
 
   public async getCompanyDetails(symbol: string) {
-   return this.http.get(`https://api.polygon.io/v1/meta/symbols/${symbol}/company?apiKey=PuereyJTxUAGN42apNF4DRRj4VKIjtGq`)
+    this.subscribe = this.http.get(`https://api.polygon.io/v1/meta/symbols/${symbol}/company?apiKey=PuereyJTxUAGN42apNF4DRRj4VKIjtGq`)
       .subscribe()
   }
 }
-

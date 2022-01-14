@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { StocksService } from '../stocks/stocks.service';
 import { UserService } from '../user/user.service';
 import { UtilsService } from '../utils/utils.service';
@@ -12,6 +12,7 @@ export class DashboardService {
 
 
   isOpen = true
+  private subscribe: Subscription
   private _sidebarOpen$ = new BehaviorSubject(this.isOpen)
   public sidebarOpen$ = this._sidebarOpen$.asObservable()
 
@@ -22,18 +23,18 @@ export class DashboardService {
   }
 
   dashboardData() {
-    var chartData: { name: string; amount: number; stockData: any; }[]= []
+    var chartData: { name: string; amount: number; stockData: any; }[] = []
     this.userService.getUser()
     let user: any;
-    this.userService.currUser$.subscribe(res => {
+    this.subscribe = this.userService.currUser$.subscribe(res => {
       user = res
     })
 
-    user.portfolio.forEach((stock: { symbol: string; amount: number; }) => {
+    user.portfolio.forEach( (stock: { symbol: string; amount: number; }) => {
       chartData.push(
         {
           name: stock.symbol,
-          amount:stock.amount,
+          amount: stock.amount,
           stockData: this.stockService.loadStockDataDaily(stock.symbol)
         });
     })

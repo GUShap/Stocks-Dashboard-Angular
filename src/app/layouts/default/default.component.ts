@@ -1,6 +1,8 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Observer, Subscription } from 'rxjs';
+import { User } from 'src/app/models/user';
 import { DashboardService } from 'src/app/services/dashboard/dashboard.service';
+import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
   selector: 'app-default',
@@ -10,11 +12,17 @@ import { DashboardService } from 'src/app/services/dashboard/dashboard.service';
 export class DefaultComponent implements OnInit {
   @Output() resize = new EventEmitter()
 
+  subscribe: Subscription
   sideBarOpen$!: boolean;
-  constructor(private dashboardService: DashboardService) { }
+
+  currUser$;
+
+  constructor(private dashboardService: DashboardService, private userService: UserService) { }
 
   ngOnInit(): void {
-    this.dashboardService.sidebarOpen$.subscribe(res => this.sideBarOpen$ = res)
+    this.subscribe = this.dashboardService.sidebarOpen$.subscribe(res => this.sideBarOpen$ = res)
+    this.userService.loadUsers()
+    this.userService.currUser$.subscribe(user=> this.currUser$ = user)
   }
 
   toggleSidebar() {
