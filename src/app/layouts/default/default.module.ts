@@ -19,6 +19,7 @@ import {MatPaginatorModule} from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 
 
+import { FormsModule } from '@angular/forms';
 
 
 
@@ -27,6 +28,7 @@ import { MatInputModule } from '@angular/material/input';
     DefaultComponent,
     DashboardComponent,
     PostsComponent,
+
     
   ],
   imports: [
@@ -40,7 +42,8 @@ import { MatInputModule } from '@angular/material/input';
     MatIconModule,
     MatFormFieldModule,
     MatPaginatorModule,
-    MatInputModule
+    MatInputModule,
+    FormsModule,
   ],
   providers:[
     DashboardService,

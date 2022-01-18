@@ -6,6 +6,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DefaultModule } from './layouts/default/default.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { FormsModule } from '@angular/forms';
 
 
 
@@ -19,7 +21,9 @@ import { DefaultModule } from './layouts/default/default.module';
     AppRoutingModule,
     BrowserAnimationsModule,
     DefaultModule,
-    HttpClientModule
+    HttpClientModule,
+    AuthModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

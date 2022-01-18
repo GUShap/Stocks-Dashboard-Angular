@@ -96,7 +96,7 @@ export class UserService {
   public getEmptyUser() {
     return {
       email: '',
-      name: '',
+      username: '',
       password: ''
     }
   }
@@ -117,5 +117,38 @@ export class UserService {
     return contacts
   }
 
+
+  public login({ email, password }) {
+    this.loadUsers()
+    const user = this._usersDb.find(user => (user.email === email) && (user.login.password === password))
+    if (user) {
+      this._currUser$.next(user)
+      return user
+    }
+    else return null
+  }
+
+  public register({ username, email, password }) {
+    this.http.get('https://randomuser.me/api')
+      .subscribe((user: any) => {
+        user.id = this.utils.setId()
+        user.email = email
+        user.login.username = username
+        user.login.password = password
+        user.balance = this.utils.getRandomInt()
+        user.imgUrl = user.picture.large
+        user.portfolio = []
+        delete user.picture
+        this._usersDb.push(user)
+        this.utils.store(this.usersKey, this._usersDb)
+      })
+    this.login({ email, password })
+  }
+
+  public checkValidEmail(email) {
+    this.loadUsers()
+    if (this._usersDb.some(user => user.email === email)) return false
+    else return true
+  }
 
 }

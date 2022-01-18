@@ -24,12 +24,25 @@ export class UtilsService {
     return Math.floor(Math.random() * (max - min) + min)
   }
 
-  public store(key: string, any: any): void {
-    localStorage[key] = JSON.stringify(any);
+  public store(key: string, item: any): void {
+    localStorage[key] = JSON.stringify(item);
   }
 
   public load(key: string): any {
     var str = localStorage[key] || 'null';
     return JSON.parse(str);
+  }
+
+  public storeToSession(key: string, item: any) {
+    sessionStorage[key] = JSON.stringify(item);
+  }
+
+  public loadFromSession(key: string) {
+    var str = sessionStorage[key] || 'null';
+    return JSON.parse(str);
+  }
+
+  public deleteFromSession(key: string) {
+    delete sessionStorage[key]
   }
 }

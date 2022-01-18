@@ -19,7 +19,15 @@
                 </li>
                 <li>
                     <mat-menu #menu="matMenu">
-                        <button mat-menu-item>
+                        <button mat-menu-item [routerLink]="['login']" routerLinkActive="active">
+                            <mat-icon> vpn_key</mat-icon>
+                           <span>Log in</span> 
+                        </button>
+                        <button mat-menu-item [routerLink]="['register']" routerLinkActive="active">
+                            <mat-icon>movie</mat-icon>
+                           <span>Register</span> 
+                        </button>
+                        <button mat-menu-item [routerLink]="" >
                             <mat-icon>exit_to_app</mat-icon>
                            <span>Sign out</span> 
                         </button>

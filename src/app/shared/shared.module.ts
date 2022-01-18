@@ -50,7 +50,8 @@ import { TableComponent } from './widgets/table/table.component';
     MatTableModule,
     MatPaginatorModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    
   ],
   exports:[
     HeaderComponent,
