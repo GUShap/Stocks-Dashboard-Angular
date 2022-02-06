@@ -35,16 +35,15 @@ export class RegisterComponent implements OnInit {
         return
       }
       if (email.includes('@')) {
-        const isValid = this.userService.checkValidEmail(email)
-        if (isValid) {
-          this.userService.register(this.info)
-        }
-        else this.invalidEmail = 'email already in use'
+        this.userService.checkValidEmail(email)
+          ? this.invalidEmail = ''
+          : this.invalidEmail = 'email already in use'
+
       }
       else this.invalidEmail = 'email must contain @'
-    }, 2000)
+    }, 1500)
   }
-  
+
   registerUser() {
     if (!this.userService.checkValidEmail(this.info.email)) {
       this.invalidEmail = 'email already registered'
@@ -53,4 +52,13 @@ export class RegisterComponent implements OnInit {
     this.userService.register(this.info)
     this.route.navigate([''])
   }
+
+  emailInputClass() {
+    var email = this.info.email
+
+    if (!email) return ''
+    if (this.invalidEmail) return 'invalid'
+    if (this.userService.checkValidEmail(email)) return 'valid'
+  }
+
 }

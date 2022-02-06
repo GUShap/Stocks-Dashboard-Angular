@@ -1,10 +1,9 @@
-<app-header (toggleSideBar)="toggleSidebar()"></app-header>
+<app-header (toggleSideBar)="toggleSidebar()" (logout)="logout()" [user]="currUser$"></app-header>
 
-<mat-drawer-container>
+<mat-drawer-container >
     <mat-drawer mode="side" [opened]="sideBarOpen$">
-        <app-sidebar [userData]="currUser$"></app-sidebar>
+        <app-sidebar [user]="currUser$"></app-sidebar>
     </mat-drawer>
-
     <mat-drawer-content>
         <router-outlet></router-outlet>
     </mat-drawer-content>

@@ -7,17 +7,19 @@ import { DefaultComponent } from './default.component';
 import { DashboardComponent } from 'src/app/modules/dashboard/dashboard.component';
 import { RouterModule } from '@angular/router';
 import { PostsComponent } from 'src/app/modules/posts/posts.component';
+import { ContactsComponent } from 'src/app/modules/contacts/contacts.component';
+
 
 import { SharedModule } from 'src/app/shared/shared.module';
-import {MatSidenavModule} from '@angular/material/sidenav';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatDividerModule } from '@angular/material/divider';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import {MatCardModule} from '@angular/material/card';
-import {MatIconModule} from '@angular/material/icon';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatPaginatorModule} from '@angular/material/paginator';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
-
+import { MatListModule } from '@angular/material/list';
 
 import { FormsModule } from '@angular/forms';
 
@@ -28,8 +30,8 @@ import { FormsModule } from '@angular/forms';
     DefaultComponent,
     DashboardComponent,
     PostsComponent,
+    ContactsComponent
 
-    
   ],
   imports: [
     CommonModule,
@@ -43,9 +45,10 @@ import { FormsModule } from '@angular/forms';
     MatFormFieldModule,
     MatPaginatorModule,
     MatInputModule,
+    MatListModule,
     FormsModule,
   ],
-  providers:[
+  providers: [
     DashboardService,
   ]
 })

@@ -13,7 +13,7 @@ export interface User {
     imgUrl?:    string;
     registered?: Dob;
     balance?: number;
-    portfolio?: Stock[];
+    portfolio?: UserStock[];
     contacts?: any[]
 
 }
@@ -59,8 +59,10 @@ export interface Name {
     title: string;
 }
 
-export interface Stock {
+export interface UserStock {
     symbol: string;
+    name: string;
     amount: number
+    stockData: Array<any>
 }
 

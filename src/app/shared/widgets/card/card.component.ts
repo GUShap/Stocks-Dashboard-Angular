@@ -18,8 +18,6 @@ export class CardComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    // console.log(this.chartData);
-
     const { stockData, name } = this.chartData
     const slicedData = stockData.value.slice(0, 7).reverse()
     const slicedDates = stockData.date.slice(0, 7).reverse()

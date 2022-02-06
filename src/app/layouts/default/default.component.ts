@@ -1,7 +1,9 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable, Observer, Subscription } from 'rxjs';
 import { User } from 'src/app/models/user';
 import { DashboardService } from 'src/app/services/dashboard/dashboard.service';
+import { StocksService } from 'src/app/services/stocks/stocks.service';
 import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
@@ -15,18 +17,26 @@ export class DefaultComponent implements OnInit {
   subscribe: Subscription
   sideBarOpen$!: boolean;
 
-  currUser$;
+  currUser$: User;
 
-  constructor(private dashboardService: DashboardService, private userService: UserService) { }
+  constructor(
+    private dashboardService: DashboardService,
+    private userService: UserService,
+    private route: Router) { }
 
   ngOnInit(): void {
+    this.userService.getUser()
+    this.userService.currUser$.subscribe(user => this.currUser$ = user)
+    if (!this.currUser$) this.route.navigate(['login'])
     this.subscribe = this.dashboardService.sidebarOpen$.subscribe(res => this.sideBarOpen$ = res)
-    this.userService.loadUsers()
-    this.userService.currUser$.subscribe(user=> this.currUser$ = user)
   }
 
   toggleSidebar() {
     this.dashboardService.toggleSidebar()
   }
 
+  logout(){
+    this.userService.logout()
+    this.route.navigate(['login'])
+  }
 }

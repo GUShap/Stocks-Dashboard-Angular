@@ -1,44 +1,46 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
+import { User, UserStock } from 'src/app/models/user';
 import { StocksService } from '../stocks/stocks.service';
-import { UserService } from '../user/user.service';
-import { UtilsService } from '../utils/utils.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DashboardService {
-  constructor(private userService: UserService, private stockService: StocksService, private utils: UtilsService) { }
+  constructor(
+    private stockService: StocksService,
+  ) { }
 
 
-  isOpen = true
+  private isOpen = true
   private subscribe: Subscription
+  
   private _sidebarOpen$ = new BehaviorSubject(this.isOpen)
   public sidebarOpen$ = this._sidebarOpen$.asObservable()
 
+private _dashBoardData$ = new BehaviorSubject(null)
+public dashBoardData$ = this._dashBoardData$.asObservable()
 
   toggleSidebar() {
     this.isOpen = !this.isOpen
     this._sidebarOpen$.next(this.isOpen)
   }
 
-  dashboardData() {
-    var chartData: { name: string; amount: number; stockData: any; }[] = []
-    this.userService.getUser()
-    let user: any;
-    this.subscribe = this.userService.currUser$.subscribe(res => {
-      user = res
-    })
-
-    user.portfolio.forEach( (stock: { symbol: string; amount: number; }) => {
+  async dashboardData(user:User) {
+    var chartData= []
+    var metaData= await this.stockService.loadStockDataDaily(user.portfolio) 
+    
+    user.portfolio.forEach(async (stock,idx) => {   
       chartData.push(
         {
           name: stock.symbol,
           amount: stock.amount,
-          stockData: this.stockService.loadStockDataDaily(stock.symbol)
+          stockData: metaData[idx]
         });
     })
-
+    this._dashBoardData$.next(chartData)
+    
     return chartData
   }
+
 }

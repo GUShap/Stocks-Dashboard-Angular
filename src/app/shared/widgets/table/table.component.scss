@@ -26,17 +26,19 @@ tr.example-element-row:not(.example-expanded-row):active {
 }
 
 .example-element-diagram {
-  min-width: 80px;
   border: 2px solid black;
   padding: 8px;
   font-weight: lighter;
   margin: 8px 0;
-  height: 104px;
+  height: 107px;
+  &>*{
+    padding-bottom: 6px;
+  }
 }
 
 .example-element-symbol {
   font-weight: bold;
-  font-size: 40px;
+  font-size: 18px;
   line-height: normal;
 }
 

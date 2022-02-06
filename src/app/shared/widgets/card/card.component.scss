@@ -3,6 +3,7 @@
 h4 {
     margin-top: 0;
     margin-bottom: 5px;
+    font-weight: bold;
 }
 
 .total {
@@ -19,4 +20,8 @@ h4 {
     position: relative;
     padding: 0 5px;
     top: 5px;
+}
+
+.widget{
+    width: 170px;
 }

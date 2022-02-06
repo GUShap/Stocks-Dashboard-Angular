@@ -1,9 +1,9 @@
 <mat-toolbar>
     <mat-toolbar-row>
-        <button mat-icon-button (click)="toggleSideBar.emit()">
-            <mat-icon>menu</mat-icon>
+        <img src="/assets/logo/logo3.png" class="logo">
+        <button class="menu" mat-icon-button (click)="toggleSideBar.emit()">
+            <mat-icon class="menu">menu</mat-icon>
         </button>
-        <span>APP LOGO</span>
 
         <div fxFlex fxLayout="row" fxLayoutAlign="flex-end">
             <ul fxLayout="row" fxLayoutGap="20px">
@@ -19,15 +19,15 @@
                 </li>
                 <li>
                     <mat-menu #menu="matMenu">
-                        <button mat-menu-item [routerLink]="['login']" routerLinkActive="active">
+                        <button mat-menu-item [routerLink]="['login']" routerLinkActive="active" *ngIf="!user">
                             <mat-icon> vpn_key</mat-icon>
                            <span>Log in</span> 
                         </button>
-                        <button mat-menu-item [routerLink]="['register']" routerLinkActive="active">
+                        <button mat-menu-item [routerLink]="['register']" routerLinkActive="active" *ngIf="!user">
                             <mat-icon>movie</mat-icon>
                            <span>Register</span> 
                         </button>
-                        <button mat-menu-item [routerLink]="" >
+                        <button mat-menu-item [routerLink]="" *ngIf="user"  (click)="logout.emit()">
                             <mat-icon>exit_to_app</mat-icon>
                            <span>Sign out</span> 
                         </button>

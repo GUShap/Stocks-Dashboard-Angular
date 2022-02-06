@@ -1,35 +1,38 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, } from '@angular/core';
-import { Observable } from 'rxjs';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { User, UserStock } from 'src/app/models/user';
 import { DashboardService } from 'src/app/services/dashboard/dashboard.service';
-import { StocksService } from 'src/app/services/stocks/stocks.service';
+import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
 
-  sideBarOpen$!: boolean;
-  cmps = {
-    isBigChartShown: true,
-    isCardsShown: true,
-    isPieShown: true,
-    isTableShown: true
+  subscribe: Subscription
+  currUser$: User;
+  chartData$: UserStock[];
+
+  constructor(
+    private dashboardService: DashboardService,
+    private userService: UserService,
+    private cf: ChangeDetectorRef
+  ) { }
+
+  async ngOnInit() {
+    this.subscribe = this.userService.currUser$.subscribe(res => { this.currUser$ = res; })
+    await this.dashboardService.dashboardData(this.currUser$)
+    this.subscribe = this.dashboardService.dashBoardData$.subscribe(res => { this.chartData$ = res })
   }
 
-  chartData!: Object[];  
 
-  constructor(private dashboardService: DashboardService) { }
-
-   ngOnInit(): void {
-    this.chartData = this.dashboardService.dashboardData()
-    this.subscribeCmps()
+  ngOnDestroy(): void {
+    this.subscribe.unsubscribe()
   }
 
-  subscribeCmps() {
-    this.dashboardService.sidebarOpen$.subscribe(res => this.sideBarOpen$ = res)
-  }
+
+
 
 }

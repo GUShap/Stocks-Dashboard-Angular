@@ -1,32 +1,31 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import * as Highcharts from 'highcharts'
 import HC_exporting from 'highcharts/modules/exporting'
+import { UserStock } from 'src/app/models/user';
 
 @Component({
   selector: 'app-widget-area',
   templateUrl: './area.component.html',
-  styleUrls: ['./area.component.scss']
+  styleUrls: ['./area.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AreaComponent implements OnInit {
-  @Input() chartData: any;
+  @Input() chartData: UserStock[];
   chartOptions = {};
   Highcharts = Highcharts
 
-  dataForXAxis!: number[]
-  dataForYAxis!: number[]
-
+  dataForXAxis: number[]
 
   constructor() { }
 
-  ngOnInit(): void {
-    this.chartData.forEach((stock:any) => {
 
-      if (!this.dataForXAxis) {
-        this.dataForXAxis = stock.stockData.date.map((date: string) => {
-          var time = new Date(date)
-          return `${time.getDate()}/${time.getMonth() + 1}/${time.getFullYear()}`
-        })
-      }
+  ngOnInit(): void {
+    
+    this.chartData.forEach((stock: any) => {
+      this.dataForXAxis = stock.stockData.date.map((date: string) => {
+        var time = new Date(date)
+        return `${time.getDate()}/${time.getMonth() + 1}/${time.getFullYear()}`
+      })
       stock.data = stock.stockData.value.map((price: string | number) => +price)
     })
     
@@ -63,12 +62,15 @@ export class AreaComponent implements OnInit {
     };
 
     HC_exporting(Highcharts);
-
     setInterval(() => {
       window.dispatchEvent(
         new Event('resize')
       ), 1000
     })
+  }
+
+  getChartData() {
+
   }
 
 }

@@ -12,6 +12,7 @@ export class UserService {
 
   private _usersDb: User[]
   private usersKey: string = 'usersDb'
+  private currUserKey: string = 'user'
 
   private _users$ = new BehaviorSubject<User[]>([])
   public users$ = this._users$.asObservable()
@@ -46,7 +47,7 @@ export class UserService {
     imgUrl: 'https://robohash.org/re'
   }
 
-  private _currUser$ = new BehaviorSubject<Object>({})
+  private _currUser$ = new BehaviorSubject<Object>(null)
   public currUser$ = this._currUser$.asObservable()
 
   constructor(
@@ -55,7 +56,10 @@ export class UserService {
     private http: HttpClient) { }
 
   public getUser() {
-    this._currUser$.next(this.user)
+    const user = this.utils.loadFromSession(this.currUserKey)
+    user
+      ? this._currUser$.next(user)
+      : this._currUser$.next(null)
   }
 
   public loadUsers() {
@@ -73,10 +77,11 @@ export class UserService {
             user.imgUrl = user.picture.large
             user.portfolio = []
             tickerList$.forEach(symbol => {
-              if (Math.random() > 0.96) {
+              if (Math.random() > 0.96 && user.portfolio.length < 5) {
                 let stock = {
                   symbol,
-                  amount: this.utils.getRandomInt(100000, 10)
+                  amount: this.utils.getRandomInt(10000, 10),
+                  userId:user.id
                 }
                 user.portfolio.push(stock)
               }
@@ -91,14 +96,6 @@ export class UserService {
         })
     }
     this._users$.next(this._usersDb)
-  }
-
-  public getEmptyUser() {
-    return {
-      email: '',
-      username: '',
-      password: ''
-    }
   }
 
   private loadContacts(id) {
@@ -119,18 +116,24 @@ export class UserService {
 
 
   public login({ email, password }) {
-    this.loadUsers()
     const user = this._usersDb.find(user => (user.email === email) && (user.login.password === password))
     if (user) {
+      this.utils.storeToSession(this.currUserKey, user)
       this._currUser$.next(user)
       return user
     }
     else return null
   }
 
+  public logout() {
+    this.utils.deleteFromSession(this.currUserKey)
+    this._currUser$.next(null)
+  }
+
   public register({ username, email, password }) {
     this.http.get('https://randomuser.me/api')
-      .subscribe((user: any) => {
+      .subscribe((data: any) => {
+        let user = data.results[0]
         user.id = this.utils.setId()
         user.email = email
         user.login.username = username
@@ -139,14 +142,22 @@ export class UserService {
         user.imgUrl = user.picture.large
         user.portfolio = []
         delete user.picture
+
         this._usersDb.push(user)
         this.utils.store(this.usersKey, this._usersDb)
       })
     this.login({ email, password })
   }
 
+  public demoLog() {
+    const idx = this.utils.getRandomInt(0, this._usersDb.length - 1)
+    const user = this._usersDb[idx]
+    this.utils.storeToSession(this.currUserKey, user)
+    this._currUser$.next(user)
+  }
+
   public checkValidEmail(email) {
-    this.loadUsers()
+    if (!email.includes('@')) return false
     if (this._usersDb.some(user => user.email === email)) return false
     else return true
   }

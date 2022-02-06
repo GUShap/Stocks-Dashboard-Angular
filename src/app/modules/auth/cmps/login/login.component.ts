@@ -25,6 +25,7 @@ export class LoginComponent implements OnInit {
   isPasswordVisible: boolean
 
   ngOnInit(): void {
+    this.userService.loadUsers()
     this.logTriesCount = 0
     this.isPasswordVisible = false
   }
@@ -35,6 +36,11 @@ export class LoginComponent implements OnInit {
     const user = this.userService.login(this.info)
     user ? this.route.navigate(['']) : this.failToLogin()
   }
+
+loginDemo(){
+  this.userService.demoLog()
+  this.route.navigate([''])
+}
 
   failToLogin() {
 
